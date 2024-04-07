@@ -1,9 +1,9 @@
-#ifndef TEST_LIB_H_
-#define TEST_LIB_H_
+#ifndef TEST_LIB_H
+#define TEST_LIB_H
 
 extern "C"
 {
     int test_func();
 }
 
-#endif // TEST_LIB_H_
+#endif // TEST_LIB_H
