@@ -22,7 +22,10 @@ impl eframe::App for TPGApp
 
             if button_resp.clicked()
             {
-                println!("button clicked");
+                let test_int;
+                unsafe { test_int = test_func(); }
+
+                println!("{}", test_int.to_string());
             }
         });
     }
@@ -31,13 +34,7 @@ impl eframe::App for TPGApp
 
 fn main() -> eframe::Result<(), eframe::Error>
 {
-    let test_int;
-
-    unsafe { test_int = test_func(); }
-
-    let test_string = test_int.to_string();
-
-    run_native(&test_string, NativeOptions::default(), Box::new(|_cc: &CreationContext<'_>| {
+    run_native("TPG Test App", NativeOptions::default(), Box::new(|_cc: &CreationContext<'_>| {
         Box::new(TPGApp {})
     }))
 }
