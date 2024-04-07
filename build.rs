@@ -1,4 +1,5 @@
 extern crate cmake;
+extern crate cc;
 use cmake::Config;
 
 fn main()
