@@ -34,7 +34,10 @@ impl eframe::App for TPGApp
 
 fn main() -> eframe::Result<(), eframe::Error>
 {
-    run_native("TPG Test App", NativeOptions::default(), Box::new(|_cc: &CreationContext<'_>| {
-        Box::new(TPGApp {})
-    }))
+    run_native("TPG Test App",
+                NativeOptions::default(),
+                Box::new(|_cc: &CreationContext<'_>| {
+                    Box::new(TPGApp {})
+                })
+    )
 }
