@@ -3,8 +3,8 @@
 
 extern "C"
 {
-    void test_func()
+    int test_func()
     {
-        std::cout << "test success" << std::endl;
+        return 12345;
     }
 }

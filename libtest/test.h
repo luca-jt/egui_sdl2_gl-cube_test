@@ -3,7 +3,7 @@
 
 extern "C"
 {
-    void test_func();
+    int test_func();
 }
 
 #endif // TEST_LIB_H_

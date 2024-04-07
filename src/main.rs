@@ -2,13 +2,42 @@
 
 extern "C"
 {
-    fn test_func();
+    fn test_func() -> i32;
 }
 
-fn main()
+use eframe::*;
+use egui::{CentralPanel, Response, Ui};
+
+
+struct TPGApp {}
+
+impl eframe::App for TPGApp
 {
-    unsafe
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame)
     {
-        test_func();
-    };
+        CentralPanel::default().show(ctx, |ui: &mut Ui| {
+            ui.label("text placeholder");
+
+            let button_resp: Response = ui.button("test button");
+
+            if button_resp.clicked()
+            {
+                println!("button clicked");
+            }
+        });
+    }
+}
+
+
+fn main() -> eframe::Result<(), eframe::Error>
+{
+    let test_int;
+
+    unsafe { test_int = test_func(); }
+
+    let test_string = test_int.to_string();
+
+    run_native(&test_string, NativeOptions::default(), Box::new(|_cc: &CreationContext<'_>| {
+        Box::new(TPGApp {})
+    }))
 }
