@@ -5,8 +5,8 @@ extern "C"
     fn test_func() -> i32;
 }
 
-use eframe::*;
-use egui::{vec2, CentralPanel, Color32, FontId, Response, RichText, Rounding, Ui, FontFamily};
+use eframe::{Frame, NativeOptions, CreationContext, run_native};
+use egui::*;
 
 
 struct TPGApp {}
