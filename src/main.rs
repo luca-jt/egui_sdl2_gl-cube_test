@@ -22,7 +22,7 @@ impl eframe::App for TPGApp
                 ui.add_space(80.0);
 
                 ui.label(RichText::new("Test CMake Link")
-                    .font(FontId::new(20.0, FontFamily::Monospace))
+                    .font(FontId::new(20.0, FontFamily::Proportional))
                     .underline()
                 );
 
