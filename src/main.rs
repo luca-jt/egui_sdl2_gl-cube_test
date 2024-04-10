@@ -13,7 +13,7 @@ struct TPGApp {}
 
 impl eframe::App for TPGApp
 {
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame)
+    fn update(&mut self, ctx: &Context, _frame: &mut Frame)
     {
         CentralPanel::default().show(ctx, |ui: &mut Ui| {
 
@@ -28,7 +28,7 @@ impl eframe::App for TPGApp
 
                 ui.add_space(80.0);
 
-                let button = egui::Button::new(RichText::new("call C++ function")
+                let button = Button::new(RichText::new("call C++ function")
                                                 .strong()
                                                 .font(FontId::new(16.0, FontFamily::Monospace)))
                                     .fill(Color32::from_rgb(0, 255, 255))
