@@ -75,6 +75,7 @@ impl eframe::App for TPGApp
         });
 
 
+        self.canvas.set_draw_color(Color::RGB(255, 255, 255));
         self.canvas.clear();
         self.canvas.set_draw_color(Color::RGB(255, 0, 0));
         self.canvas.draw_line((100, 100), (200, 200)).ok().unwrap();
