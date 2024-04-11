@@ -989,6 +989,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "egui_sdl2_gl"
+version = "0.27.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8dd8212c2f77f437b71a9e608457f5e6f320c57424efb912541c2d27a73a2dd0"
+dependencies = [
+ "ahash",
+ "egui",
+ "gl",
+ "memoffset 0.9.1",
+ "sdl2",
+]
+
+[[package]]
 name = "egui_sdl2_test"
 version = "0.1.0"
 dependencies = [
@@ -996,6 +1009,7 @@ dependencies = [
  "cmake",
  "eframe",
  "egui",
+ "egui_sdl2_gl",
  "sdl2",
 ]
 
@@ -1293,6 +1307,15 @@ dependencies = [
  "cfg-if",
  "libc",
  "wasi",
+]
+
+[[package]]
+name = "gl"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a94edab108827d67608095e269cf862e60d920f144a5026d3dbcfd8b877fb404"
+dependencies = [
+ "gl_generator",
 ]
 
 [[package]]
@@ -2331,6 +2354,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "26bcacfdd45d539fb5785049feb0038a63931aa896c7763a2a12e125ec58bd29"
 dependencies = [
  "cfg-if",
+ "cmake",
  "libc",
  "version-compare",
 ]
