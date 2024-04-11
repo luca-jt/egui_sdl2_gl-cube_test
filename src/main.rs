@@ -26,12 +26,11 @@ fn main()
 {
     let sdl2_context = sdl2::init().unwrap();
     let video_subsystem = sdl2_context.video().unwrap();
+
     let gl_attr = video_subsystem.gl_attr();
-
-    gl_attr.set_context_profile(GLProfile::Core);
     // On linux, OpenGL ES Mesa driver 22.0.0+ can be used like so:
-    // gl_attr.set_context_profile(GLProfile::GLES);
-
+    //gl_attr.set_context_profile(GLProfile::GLES);
+    gl_attr.set_context_profile(GLProfile::Core);
     gl_attr.set_double_buffer(true);
     gl_attr.set_multisample_samples(4);
 
@@ -41,12 +40,11 @@ fn main()
         .build()
         .unwrap();
 
-    // Create a window context
     let _ctx = window.gl_create_context().unwrap();
 
-    let shader_ver = ShaderVersion::Default;
     // On linux use GLES SL 100+, like so:
-    // let shader_ver = ShaderVersion::Adaptive;
+    //let shader_ver = ShaderVersion::Adaptive;
+    let shader_ver = ShaderVersion::Default;
 
     let (mut painter, mut egui_state) = egui_backend::with_sdl2(&window, shader_ver, DpiScaling::Default);
     let egui_ctx = egui::Context::default();
@@ -111,6 +109,9 @@ fn main()
             });
         });
 
+        // render test texture to gui
+        //...
+
         let FullOutput
         {
             platform_output,
@@ -122,14 +123,6 @@ fn main()
 
         // Process ouput
         egui_state.process_output(&window, &platform_output);
-
-        // For default dpi scaling only, Update window when the size of resized window is very small (to avoid egui::CentralPanel distortions).
-        // if egui_ctx.used_size() != painter.screen_rect.size() {
-        //     println!("resized.");
-        //     let _size = egui_ctx.used_size();
-        //     let (w, h) = (_size.x as u32, _size.y as u32);
-        //     window.set_size(w, h).unwrap();
-        // }
 
         let paint_jobs = egui_ctx.tessellate(shapes, pixels_per_point);
         painter.paint_jobs(None, textures_delta, paint_jobs);
@@ -144,11 +137,9 @@ fn main()
         {
             if let Some(event) = event_pump.wait_event_timeout(5)
             {
-                match event
-                {
+                match event {
                     Event::Quit { .. } => break 'running,
                     _ => {
-                        // Process input event
                         egui_state.process_input(&window, event, &mut painter);
                     }
                 }
@@ -161,7 +152,6 @@ fn main()
                 match event {
                     Event::Quit { .. } => break 'running,
                     _ => {
-                        // Process input event
                         egui_state.process_input(&window, event, &mut painter);
                     }
                 }
