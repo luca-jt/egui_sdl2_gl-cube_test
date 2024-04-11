@@ -2,23 +2,9 @@
 #define TEST_LIB_H
 
 
-#include <SDL.h>
-
-
-struct SDL_comm
-{
-    SDL_Window * wp;
-    SDL_Renderer * rp;
-    SDL_Texture * tp;
-};
-
-
 extern "C"
 {
     int test_func();
-    void init_SDL();
-    void close_SDL();
-    void* get_sdl2_texture();
 }
 
 

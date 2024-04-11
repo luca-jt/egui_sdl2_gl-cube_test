@@ -9,8 +9,8 @@ build = "build.rs"
 [dependencies]
 egui = "*"
 eframe = "*"
+sdl2 = "*"
 
 [build-dependencies]
 cmake = "*"
 cc = "*"
-sdl2 = "*"
