@@ -3,6 +3,9 @@
 extern "C"
 {
     fn test_func() -> i32;
+    fn init_SDL();
+    fn close_SDL();
+    fn get_sdl2_texture() -> *mut std::ffi::c_void;
 }
 
 use eframe::{Frame, NativeOptions, CreationContext, run_native};
