@@ -1,3 +1,0 @@
-[submodule "libtest/SDL"]
-	path = libtest/SDL
-	url = https://github.com/libsdl-org/SDL.git
