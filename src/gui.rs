@@ -11,7 +11,7 @@ extern crate sdl2;
 use eframe::{Frame, CreationContext};
 use egui::*;
 use sdl2::render::WindowCanvas;
-use sdl2::pixels::{Color, PixelFormatEnum};
+use sdl2::pixels::Color;
 
 
 pub struct TPGApp
@@ -69,16 +69,22 @@ impl eframe::App for TPGApp
                 }
 
 
-                let texture_creator = self.canvas.texture_creator();
+                self.canvas.set_draw_color(Color::RGB(255, 255, 255));
+                self.canvas.clear();
+                self.canvas.set_draw_color(Color::RGB(255, 0, 0));
+                self.canvas.draw_line((10, 10), (400, 400)).ok().unwrap();
+                self.canvas.present();
+
+                /* let texture_creator = self.canvas.texture_creator();
                 let mut texture = texture_creator
-                    .create_texture_target(PixelFormatEnum::RGB888, 800, 600).expect("sdl texture failed");
+                    .create_texture_target(sdl2::pixels::PixelFormatEnum::RGB888, 800, 600).expect("sdl texture failed");
 
                 self.canvas.with_texture_canvas(&mut texture, |texture_canvas| {
                     texture_canvas.clear();
                     texture_canvas.set_draw_color(Color::RGB(255, 0, 0));
                     texture_canvas.draw_line((100, 100), (200, 200)).ok().unwrap();
                 })
-                .expect("canvas rendering failed");
+                .expect("canvas rendering failed"); */
 
             });
 

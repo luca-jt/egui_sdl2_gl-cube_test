@@ -13,7 +13,7 @@ fn main() -> Result<(), Error>
 
     run_native("TPG Test App",
                 NativeOptions::default(),
-                Box::new(|cc: &CreationContext<'_>| {
+                Box::new(move |cc: &CreationContext<'_>| {
                     Box::new(TPGApp::new(cc, canvas))
                 })
     )
