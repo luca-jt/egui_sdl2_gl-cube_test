@@ -8,12 +8,30 @@ extern "C"
 
 extern crate sdl2;
 
-use eframe::Frame;
+use eframe::{Frame, CreationContext};
 use egui::*;
-use sdl2::{pixels::Color, event::Event};
+use sdl2::render::WindowCanvas;
+use sdl2::pixels::{Color, PixelFormatEnum};
 
 
-pub struct TPGApp {}
+pub struct TPGApp
+{
+    canvas: WindowCanvas
+}
+
+
+impl TPGApp
+{
+    pub fn new(_cc: &CreationContext<'_>, canvas: WindowCanvas) -> TPGApp
+    {
+        // Customize egui here with cc.egui_ctx.set_fonts and cc.egui_ctx.set_visuals.
+        // Restore app state using cc.storage (requires the "persistence" feature).
+        // Use the cc.gl (a glow::Context) to create graphics shaders and buffers that you can use
+        // for e.g. egui::PaintCallback.
+
+        TPGApp { canvas }
+    }
+}
 
 
 impl eframe::App for TPGApp
@@ -49,6 +67,18 @@ impl eframe::App for TPGApp
 
                     println!("{}", test_int.to_string());
                 }
+
+
+                let texture_creator = self.canvas.texture_creator();
+                let mut texture = texture_creator
+                    .create_texture_target(PixelFormatEnum::RGB888, 800, 600).expect("sdl texture failed");
+
+                self.canvas.with_texture_canvas(&mut texture, |texture_canvas| {
+                    texture_canvas.clear();
+                    texture_canvas.set_draw_color(Color::RGB(255, 0, 0));
+                    texture_canvas.draw_line((100, 100), (200, 200)).ok().unwrap();
+                })
+                .expect("canvas rendering failed");
 
             });
 
