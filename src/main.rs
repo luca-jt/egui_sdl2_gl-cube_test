@@ -5,13 +5,11 @@ extern "C"
     fn test_func() -> i32;
 }
 
-pub mod gui;
-pub use crate::gui::*;
-use egui::*;
 
 use egui_backend::egui::FullOutput;
 use egui_backend::sdl2::video::GLProfile;
 use egui_backend::{egui, gl, sdl2};
+use egui_backend::egui::*;
 use egui_backend::{sdl2::event::Event, DpiScaling, ShaderVersion};
 use std::time::Instant;
 use sdl2::video::SwapInterval;
