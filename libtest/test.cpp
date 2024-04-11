@@ -4,6 +4,9 @@
 #include <iostream>
 
 
+SDL_comm sc = {nullptr, nullptr, nullptr};
+
+
 extern "C"
 {
     int test_func()

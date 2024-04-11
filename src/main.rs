@@ -1,4 +1,5 @@
 #[link(name="test", kind="static")]
+//#[link(name="SDL2", kind="static")]
 
 extern "C"
 {
@@ -37,6 +38,10 @@ impl eframe::App for TPGApp
                                     .fill(Color32::from_rgb(0, 255, 255))
                                     .rounding(Rounding::same(100.0))
                                     .min_size(vec2(200.0, 200.0));
+
+                let _sdl_tex_ptr = unsafe { get_sdl2_texture() };
+                //let texture: 
+                //let sdl_image = Image::from_texture(texture);
                                 
                 let button_resp: Response = ui.add(button);
 
@@ -57,10 +62,16 @@ impl eframe::App for TPGApp
 
 fn main() -> eframe::Result<(), eframe::Error>
 {
-    run_native("TPG Test App",
+    unsafe { init_SDL() };
+
+    let res = run_native("TPG Test App",
                 NativeOptions::default(),
                 Box::new(|_cc: &CreationContext<'_>| {
                     Box::new(TPGApp {})
                 })
-    )
+    );
+
+    unsafe { close_SDL() };
+
+    return res;
 }

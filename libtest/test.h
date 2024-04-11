@@ -12,8 +12,6 @@ struct SDL_comm
     SDL_Texture * tp;
 };
 
-static inline SDL_comm sc = {nullptr, nullptr, nullptr};
-
 
 extern "C"
 {
