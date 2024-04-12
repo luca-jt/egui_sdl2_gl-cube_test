@@ -2,9 +2,12 @@
 #define TEST_LIB_H
 
 
+#include <cstdint>
+
+
 extern "C"
 {
-    int test_func();
+    int32_t test_func();
 }
 
 

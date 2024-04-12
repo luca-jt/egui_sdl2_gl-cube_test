@@ -8,6 +8,7 @@ build = "build.rs"
 
 [dependencies]
 egui_sdl2_gl = "*"
+libc = "*"
 
 [build-dependencies]
 cmake = "*"

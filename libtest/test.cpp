@@ -4,7 +4,7 @@
 
 extern "C"
 {
-    int test_func()
+    int32_t test_func()
     {
         static int32_t i = 0;
         return i++;
