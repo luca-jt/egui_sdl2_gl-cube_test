@@ -2,7 +2,7 @@ use egui_sdl2_gl::egui::FullOutput;
 use egui_sdl2_gl::{egui, sdl2};
 use egui_sdl2_gl::egui::*;
 use egui_sdl2_gl::egui::load::SizedTexture;
-use egui_sdl2_gl::{sdl2::event::Event, DpiScaling, ShaderVersion};
+use egui_sdl2_gl::{DpiScaling, ShaderVersion};
 use std::time::Instant;
 
 pub mod render_util;
@@ -46,7 +46,7 @@ fn main()
 
         srgba_buffer.fill(Color32::WHITE);
         // draw to the image
-        draw_circle(circle_radius as usize, PIC_WIDTH / 2, PIC_HEIGHT / 2, &mut srgba_buffer);
+        draw_circle(circle_radius as usize, PIC_WIDTH / 2, PIC_HEIGHT / 2, Color32::RED, &mut srgba_buffer);
         //...
         
         painter.update_user_texture_data(chip8_tex_id, &srgba_buffer);
@@ -75,10 +75,7 @@ fn main()
                                 
                 if ui.add(button).clicked()
                 {
-                    unsafe
-                    {
-                        println!("{} | {}", test_func().to_string(), test_char() as char);
-                    }
+                    unsafe { println!("{} | {}", test_func().to_string(), test_char() as char); }
                 }
 
                 ui.add_space(10.0);
@@ -119,27 +116,9 @@ fn main()
             .expect("Missing ViewportId::ROOT")
             .repaint_delay;
 
-        if !repaint_after.is_zero()
+        if handle_events(&mut event_pump, &repaint_after, &window, &mut egui_state, &mut painter).is_err()
         {
-            if let Some(event) = event_pump.wait_event_timeout(5)
-            {
-                match event {
-                    Event::Quit { .. } => break 'running,
-                    _ => {
-                        egui_state.process_input(&window, event, &mut painter);
-                    }
-                }
-            }
-        } else {
-            for event in event_pump.poll_iter()
-            {
-                match event {
-                    Event::Quit { .. } => break 'running,
-                    _ => {
-                        egui_state.process_input(&window, event, &mut painter);
-                    }
-                }
-            }
+            break 'running;
         }
     }
 }

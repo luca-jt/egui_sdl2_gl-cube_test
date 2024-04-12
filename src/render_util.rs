@@ -1,9 +1,14 @@
+use std::time::Duration;
+use egui_sdl2_gl::painter::Painter;
 use egui_sdl2_gl::sdl2::video::GLProfile;
 use egui_sdl2_gl::sdl2::video::SwapInterval;
 use egui_sdl2_gl::sdl2::video::Window;
 use egui_sdl2_gl::egui::Color32;
+use egui_sdl2_gl::sdl2::EventPump;
 use egui_sdl2_gl::sdl2::VideoSubsystem;
+use egui_sdl2_gl::sdl2::event::Event;
 use egui_sdl2_gl::gl;
+use egui_sdl2_gl::EguiStateHandler;
 use crate::constants::*;
 
 
@@ -22,7 +27,7 @@ pub fn enable_vsync(window: &Window)
 }
 
 
-pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, srgba_buffer: &mut Vec<Color32>)
+pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, color: Color32, srgba_buffer: &mut Vec<Color32>)
 {
     for y in 0..PIC_HEIGHT
     {
@@ -34,7 +39,7 @@ pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, srgba_buffer: &mut
 
             if x_with_offset * x_with_offset + y_with_offset * y_with_offset <= (radius * radius) as i64
             {
-                srgba_buffer[buffer_index] = Color32::RED;
+                srgba_buffer[buffer_index] = color;
             }
         }
     }
@@ -58,8 +63,41 @@ pub fn clear_gl_screen()
 {
     unsafe
     {
-        // Clear the screen to green
-        gl::ClearColor(0.3, 0.6, 0.3, 1.0);
+        // Clear the screen to white
+        gl::ClearColor(1.0, 1.0, 1.0, 1.0);
         gl::Clear(gl::COLOR_BUFFER_BIT);
     }
+}
+
+
+pub fn handle_events(ep: &mut EventPump, ra: &Duration, w: &Window, es: &mut EguiStateHandler, p: &mut Painter) -> Result<(), ()>
+{
+    if !ra.is_zero()
+    {
+        if let Some(event) = ep.wait_event_timeout(5)
+        {
+            match event
+            {
+                Event::Quit { .. } => return Err(()),
+                _ => {
+                    es.process_input(&w, event, p);
+                }
+            }
+        }
+    } else {
+        for event in ep.poll_iter()
+        {
+            match event
+            {
+                Event::Quit { .. } => return Err(()),
+                _ => {
+                    es.process_input(&w, event, p);
+                }
+            }
+        }
+    }
+
+    //... other events go here
+
+    Ok(())
 }

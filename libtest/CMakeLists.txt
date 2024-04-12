@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.17)
 set(CMAKE_CXX_STANDARD 20)
 
+#if (WIN32)
+#    set(CMAKE_CXX_COMPILER "g++.exe")
+#endif (WIN32)
+
 project(test_cpp_lib)
 
 add_subdirectory(lib2)

@@ -1,12 +1,10 @@
 extern crate cmake;
 extern crate cc;
 
-use cmake::Config;
-
 
 fn main()
 {
-    let dst = Config::new("libtest")
+    let dst = cmake::Config::new("libtest")
         .very_verbose(true)
         .target("all")
         .build();
