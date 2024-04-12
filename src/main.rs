@@ -86,11 +86,11 @@ fn main()
 
                 let button = Button::new(RichText::new("call C++ function")
                         .strong()
-                        .font(FontId::new(10.0, FontFamily::Monospace))
+                        .font(FontId::new(18.0, FontFamily::Monospace))
                         .color(Color32::from_rgb(0, 0, 0)))
                     .fill(Color32::from_rgb(0, 255, 255))
-                    .rounding(Rounding::same(50.0))
-                    .min_size(vec2(100.0, 100.0));
+                    .rounding(Rounding::same(10.0))
+                    .min_size(vec2(300.0, 100.0));
                                 
                 if ui.add(button).clicked()
                 {
