@@ -6,6 +6,7 @@ use egui_sdl2_gl::{egui, sdl2};
 use egui_sdl2_gl::egui::*;
 use egui_sdl2_gl::egui::load::SizedTexture;
 use egui_sdl2_gl::{DpiScaling, ShaderVersion};
+use egui_sdl2_gl::sdl2::audio::{AudioSpecDesired, AudioSpecWAV, AudioCVT};
 use std::time::Instant;
 
 pub mod render_util;
@@ -14,6 +15,8 @@ pub mod constants;
 use crate::constants::*;
 pub mod cpp_bindings;
 use crate::cpp_bindings::*;
+pub mod audio_util;
+use crate::audio_util::*;
 
 
 fn main()
@@ -42,6 +45,30 @@ fn main()
     let mut srgba_buffer: Vec<Color32> = vec![Color32::WHITE; PIC_WIDTH * PIC_HEIGHT];
     // user texture allows mixing egui and gl rendering contexts
     let chip8_tex_id = painter.new_user_texture((PIC_WIDTH as usize, PIC_HEIGHT as usize), &srgba_buffer, false);
+
+    // audio test (not with mixer) (currently works only once)
+    let audio_subsystem = sdl2_context.audio().unwrap();
+    let audio_spec = AudioSpecDesired{ freq: Some(44100), channels: Some(2), samples: None };
+    let audio_device = audio_subsystem
+        .open_playback(None, &audio_spec, |spec| {
+
+            let wav = AudioSpecWAV::load_wav("D:/Media/coding/egui_sdl2_test/src/res/StarWars3.wav").unwrap();
+
+            let acvt = AudioCVT::new(
+                wav.format,
+                wav.channels,
+                wav.freq,
+                spec.format,
+                spec.channels,
+                spec.freq
+            ).unwrap();
+
+            CopiedAudioData {
+                data: acvt.convert(wav.buffer().to_vec()),
+                pos: 0,
+                volume: 0.25
+            }
+        }).unwrap();
 
     let mut circle_radius: f32 = 50.0;
     let start_time = Instant::now();
@@ -100,6 +127,7 @@ fn main()
                     ui.style_mut().spacing.button_padding = Vec2::new(30.0, 30.0);      
                     if ui.add(button).clicked()
                     {
+                        audio_device.resume();
                         unsafe
                         {
                             println!("test i32: {} | test char: {}", test_func().to_string(), test_char() as char);
