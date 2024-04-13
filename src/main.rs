@@ -1,3 +1,6 @@
+// uncomment this to disable console window
+//#![windows_subsystem = "windows"]
+
 use egui_sdl2_gl::egui::FullOutput;
 use egui_sdl2_gl::{egui, sdl2};
 use egui_sdl2_gl::egui::*;
