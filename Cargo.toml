@@ -7,8 +7,12 @@ build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-egui_sdl2_gl = "*"
 libc = "*"
+
+[dependencies.egui_sdl2_gl]
+version = "*"
+default-features = true
+features = ["sdl2_mixer"]
 
 [build-dependencies]
 cmake = "*"

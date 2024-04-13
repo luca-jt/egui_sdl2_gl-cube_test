@@ -1,4 +1,7 @@
 use egui_sdl2_gl::sdl2::audio::AudioCallback;
+use egui_sdl2_gl::sdl2::mixer;
+use std::thread::sleep;
+use std::time::Duration;
 
 
 pub struct CopiedAudioData
@@ -23,4 +26,15 @@ impl AudioCallback for CopiedAudioData
             self.pos += 1;
         }
     }
+}
+
+
+pub fn play_sfx(file_path: &str) // TODO: do this in seperate thread
+{
+    let mut sfx = mixer::Chunk::from_file(file_path).unwrap();
+    sfx.set_volume(25);
+    mixer::Channel::all()
+        .play(&sfx, 1)
+        .unwrap();
+    sleep(Duration::from_secs(1));
 }
