@@ -20,8 +20,9 @@ fn main()
     set_gl_attrs(&video_subsystem);
     
     let window = video_subsystem
-        .window("SDL2 Window", SCREEN_WIDTH, SCREEN_HEIGHT)
+        .window("TPG Demo", SCREEN_WIDTH, SCREEN_HEIGHT)
         .opengl()
+        .position_centered()
         .build()
         .unwrap();
 
@@ -30,9 +31,11 @@ fn main()
 
     // On linux use GLES SL 100+, like so: ShaderVersion::Adaptive
     let (mut painter, mut egui_state) = egui_sdl2_gl::with_sdl2(&window, ShaderVersion::Default, DpiScaling::Default);
-    let egui_ctx = egui::Context::default();
     let mut event_pump = sdl2_context.event_pump().unwrap();
-    // init the frame buffer
+
+    let egui_ctx = egui::Context::default();
+    egui_ctx.set_visuals(Visuals::dark());
+    
     let mut srgba_buffer: Vec<Color32> = vec![Color32::WHITE; PIC_WIDTH * PIC_HEIGHT];
     // user texture allows mixing egui and gl rendering contexts
     let chip8_tex_id = painter.new_user_texture((PIC_WIDTH as usize, PIC_HEIGHT as usize), &srgba_buffer, false);
@@ -43,10 +46,10 @@ fn main()
     'running: loop
     {
         clear_gl_screen();
-
         srgba_buffer.fill(Color32::WHITE);
+
         // draw to the image
-        draw_circle(circle_radius as usize, PIC_WIDTH / 2, PIC_HEIGHT / 2, Color32::RED, &mut srgba_buffer);
+        draw_circle(circle_radius as usize, PIC_WIDTH / 2, PIC_HEIGHT / 2, Color32::GREEN, &mut srgba_buffer);
         //...
         
         painter.update_user_texture_data(chip8_tex_id, &srgba_buffer);
@@ -54,46 +57,77 @@ fn main()
         egui_state.input.time = Some(start_time.elapsed().as_secs_f64());
         egui_ctx.begin_frame(egui_state.input.take());
 
-        CentralPanel::default().show(&egui_ctx, |ui| {
 
-            ui.vertical_centered(|ui: &mut Ui| {
+        SidePanel::right("right_render")
+            .exact_width(SCREEN_WIDTH as f32 * 2.0 / 3.0)
+            .show_separator_line(true)
+            .resizable(false)
+            .show(&egui_ctx, |ui: &mut Ui| {
+                ui.vertical_centered(|ui: &mut Ui| {
 
-                ui.add_space(10.0);
-                ui.label(RichText::new("Test CMake Link")
-                    .font(FontId::new(20.0, FontFamily::Proportional))
-                    .underline()
-                );
-                ui.add_space(20.0);
+                    ui.add_space(50.0);
 
-                let button = Button::new(RichText::new("call C++ function")
-                        .strong()
-                        .font(FontId::new(18.0, FontFamily::Monospace))
-                        .color(Color32::from_rgb(0, 0, 0)))
-                    .fill(Color32::from_rgb(0, 255, 255))
-                    .rounding(Rounding::same(10.0))
-                    .min_size(vec2(300.0, 80.0));
-                                
-                if ui.add(button).clicked()
-                {
-                    unsafe { println!("{} | {}", test_func().to_string(), test_char() as char); }
-                }
+                    let image = Image::new(SizedTexture::new(chip8_tex_id, vec2(PIC_WIDTH as f32, PIC_HEIGHT as f32)));
+                    ui.add(image);
 
-                ui.add_space(10.0);
-                ui.separator();
-                ui.add_space(20.0);
-
-                let slider = Slider::new(&mut circle_radius, 0.1..=100.0)
-                    .text("change radius")
-                    .fixed_decimals(1);
-
-                ui.add(slider);
-                ui.add_space(40.0);
-
-                let image = Image::new(SizedTexture::new(chip8_tex_id, vec2(PIC_WIDTH as f32, PIC_HEIGHT as f32)));
-                ui.add(image);
-
+                });
             });
-        });
+
+
+        TopBottomPanel::top("left_ui_button")
+            .show_separator_line(true)
+            .show(&egui_ctx, |ui: &mut Ui| {
+                ui.vertical_centered(|ui: &mut Ui| {
+
+                    ui.add_space(50.0);
+                    ui.label(RichText::new("Test CMake Link")
+                        .font(FontId::new(24.0, FontFamily::Proportional))
+                        .extra_letter_spacing(2.0)
+                        .color(Color32::from_rgb(255, 255, 255))
+                    );
+                    ui.add_space(50.0);
+
+                    let button = Button::new(RichText::new("call C++ function")
+                            .strong()
+                            .font(FontId::new(18.0, FontFamily::Monospace))
+                            .color(Color32::from_rgb(0, 0, 0)))
+                        .fill(Color32::from_rgb(0, 255, 255))
+                        .rounding(Rounding::same(10.0));
+
+                    ui.style_mut().spacing.button_padding = Vec2::new(30.0, 30.0);      
+                    if ui.add(button).clicked()
+                    {
+                        unsafe
+                        {
+                            println!("test i32: {} | test char: {}", test_func().to_string(), test_char() as char);
+                        }
+                    }
+                    ui.add_space(50.0);
+
+                });
+            });
+
+        
+        CentralPanel::default()
+            .show(&egui_ctx, |ui: &mut Ui| {
+                ui.vertical_centered(|ui: &mut Ui| {
+
+                    ui.add_space(50.0);
+
+                    let slider = Slider::new(&mut circle_radius, 0.1..=200.0)
+                        .text(RichText::new("change radius")
+                            .strong()
+                            .font(FontId::new(16.0, FontFamily::Proportional))
+                            .color(Color32::from_rgb(255, 255, 255)))
+                        .fixed_decimals(1);
+
+                    ui.style_mut().spacing.slider_width = 200.0;
+                    ui.style_mut().spacing.slider_rail_height = 10.0;
+                    ui.add(slider);
+
+                });
+            });
+
 
         let FullOutput
         {
