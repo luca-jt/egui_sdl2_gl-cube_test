@@ -29,6 +29,7 @@ impl AudioCallback for CopiedAudioData
 }
 
 
+/// play sound effect from given file path
 pub fn play_sfx(file_path: &str) // TODO: do this in seperate thread
 {
     let mut sfx = mixer::Chunk::from_file(file_path).unwrap();

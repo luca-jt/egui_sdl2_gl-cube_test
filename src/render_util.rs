@@ -12,6 +12,7 @@ use egui_sdl2_gl::EguiStateHandler;
 use crate::constants::*;
 
 
+/// enables vsync for given SDL window
 pub fn enable_vsync(window: &Window)
 {
     if let Err(error) = window.subsystem().gl_set_swap_interval(SwapInterval::VSync)
@@ -27,6 +28,7 @@ pub fn enable_vsync(window: &Window)
 }
 
 
+/// draw a filled circle with given radius at (x,y) with given color to the buffer
 pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, color: Color32, srgba_buffer: &mut Vec<Color32>)
 {
     for y in 0..PIC_HEIGHT
@@ -46,6 +48,7 @@ pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, color: Color32, sr
 }
 
 
+/// set the gl attributes for the video_subsystem
 pub fn set_gl_attrs(video_subsystem: &VideoSubsystem)
 {
     let gl_attr = video_subsystem.gl_attr();
@@ -59,17 +62,18 @@ pub fn set_gl_attrs(video_subsystem: &VideoSubsystem)
 }
 
 
+/// clears the gl screen with color white
 pub fn clear_gl_screen()
 {
     unsafe
     {
-        // Clear the screen to white
         gl::ClearColor(1.0, 1.0, 1.0, 1.0);
         gl::Clear(gl::COLOR_BUFFER_BIT);
     }
 }
 
 
+/// handle the SDL events with EventPump ep
 pub fn handle_events(ep: &mut EventPump, ra: &Duration, w: &Window, es: &mut EguiStateHandler, p: &mut Painter) -> Result<(), ()>
 {
     if !ra.is_zero()
@@ -84,20 +88,21 @@ pub fn handle_events(ep: &mut EventPump, ra: &Duration, w: &Window, es: &mut Egu
                 }
             }
         }
-    } else {
+    }
+    else
+    {
         for event in ep.poll_iter()
         {
             match event
             {
                 Event::Quit { .. } => return Err(()),
+                //... other events go here
                 _ => {
                     es.process_input(&w, event, p);
                 }
             }
         }
     }
-
-    //... other events go here
 
     Ok(())
 }

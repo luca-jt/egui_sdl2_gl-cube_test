@@ -48,7 +48,7 @@ fn main()
     let chip8_tex_id = painter.new_user_texture((PIC_WIDTH as usize, PIC_HEIGHT as usize), &srgba_buffer, false);
 
 
-    // audio test (not with mixer) (currently works only once)
+    // TODO audio test (not with mixer) (currently works only once)
     
     //let audio_subsystem = sdl2_context.audio().unwrap();
     
@@ -89,6 +89,7 @@ fn main()
     'running: loop
     {
         clear_gl_screen();
+        // TODO: ^^^^^^^^^ maybe not necessary
         srgba_buffer.fill(Color32::WHITE);
 
         // draw to the image
