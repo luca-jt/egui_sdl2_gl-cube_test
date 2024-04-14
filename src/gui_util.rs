@@ -28,26 +28,6 @@ pub fn enable_vsync(window: &Window)
 }
 
 
-/// draw a filled circle with given radius at (x,y) with given color to the buffer
-pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, color: Color32, srgba_buffer: &mut Vec<Color32>)
-{
-    for y in 0..PIC_HEIGHT
-    {
-        for x in 0..PIC_WIDTH
-        {
-            let x_with_offset = x as i64 - x_pos as i64;
-            let y_with_offset = y as i64 - y_pos as i64;
-            let buffer_index: usize = x + y * PIC_WIDTH;
-
-            if x_with_offset * x_with_offset + y_with_offset * y_with_offset <= (radius * radius) as i64
-            {
-                srgba_buffer[buffer_index] = color;
-            }
-        }
-    }
-}
-
-
 /// set the gl attributes for the video_subsystem
 pub fn set_gl_attrs(video_subsystem: &VideoSubsystem)
 {
@@ -105,4 +85,24 @@ pub fn handle_events(ep: &mut EventPump, ra: &Duration, w: &Window, es: &mut Egu
     }
 
     Ok(())
+}
+
+
+/// draw a filled circle with given radius at (x,y) with given color to the buffer
+pub fn draw_circle(radius: usize, x_pos: usize, y_pos: usize, color: Color32, srgba_buffer: &mut Vec<Color32>)
+{
+    for y in 0..PIC_HEIGHT
+    {
+        for x in 0..PIC_WIDTH
+        {
+            let x_with_offset = x as i64 - x_pos as i64;
+            let y_with_offset = y as i64 - y_pos as i64;
+            let buffer_index: usize = x + y * PIC_WIDTH;
+
+            if x_with_offset * x_with_offset + y_with_offset * y_with_offset <= (radius * radius) as i64
+            {
+                srgba_buffer[buffer_index] = color;
+            }
+        }
+    }
 }

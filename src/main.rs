@@ -10,8 +10,8 @@ use egui_sdl2_gl::{DpiScaling, ShaderVersion};
 //use egui_sdl2_gl::sdl2::mixer::{self, InitFlag, AUDIO_S16LSB, DEFAULT_CHANNELS};
 use std::time::Instant;
 
-pub mod render_util;
-use crate::render_util::*;
+pub mod gui_util;
+use crate::gui_util::*;
 pub mod constants;
 use crate::constants::*;
 pub mod cpp_bindings;
@@ -89,7 +89,6 @@ fn main()
     'running: loop
     {
         clear_gl_screen();
-        // TODO: ^^^^^^^^^ maybe not necessary
         srgba_buffer.fill(Color32::WHITE);
 
         // draw to the image
