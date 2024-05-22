@@ -81,6 +81,7 @@ pub struct Cube {
     vao: GLuint,
     vbo: GLuint,
     vertex_data: VertexData,
+    tex_id: GLuint,
     tbo: GLuint
 }
 
@@ -89,7 +90,8 @@ impl Mesh for Cube {
     fn new(vertex_data: VertexData, uv_data: VertexData) -> Self {
         let mut vao = 0;
         let mut vbo = 0;
-        let mut tbo = load_texture("wall.png");
+        let tex_id = load_texture("wall.png");
+        let mut tbo = 0;
         let program: ShaderProgram;
 
         unsafe {
@@ -116,7 +118,7 @@ impl Mesh for Cube {
             );
         }
 
-        Cube { program, vao, vbo, vertex_data, tbo }
+        Cube { program, vao, vbo, vertex_data, tex_id, tbo }
     }
 
 
@@ -126,7 +128,7 @@ impl Mesh for Cube {
             gl::UseProgram(self.program.id);
             gl::UniformMatrix4fv(self.program.mvp_unif, 1, gl::FALSE, &camera.mvp[0]);
             gl::ActiveTexture(gl::TEXTURE0);
-            gl::BindTexture(gl::TEXTURE_2D, self.tbo);
+            gl::BindTexture(gl::TEXTURE_2D, self.tex_id);
             gl::Uniform1i(self.program.sampler_unif, 0);
 
             gl::BindBuffer(gl::ARRAY_BUFFER, self.vbo);
@@ -166,6 +168,7 @@ impl Drop for Cube {
         unsafe {
             gl::DeleteBuffers(1, &self.vbo);
             gl::DeleteBuffers(1, &self.tbo);
+            gl::DeleteTextures(1, &self.tex_id);
             gl::DeleteVertexArrays(1, &self.vao);
         }
     }
