@@ -1,25 +1,29 @@
+use crate::meshes::*;
 use egui_sdl2_gl::gl;
 use egui_sdl2_gl::gl::types::*;
-use std::{mem, ptr};
-use crate::meshes::*;
-use std::env::current_dir;
-use stb_image::image::{Image, LoadResult};
 use nalgebra_glm as glm;
-
+use stb_image::image::{Image, LoadResult};
+use std::env::current_dir;
+use std::{mem, ptr};
 
 /// stores the current camera config for 3d rendering
 pub struct CameraConfig {
     pub pos: glm::TVec3<f32>,
     pub focus: glm::TVec3<f32>,
     pub fov: f32,
-    pub mvp: glm::Mat4
+    pub mvp: glm::Mat4,
 }
 
 impl CameraConfig {
     /// creates new config with default values
     pub fn new() -> Self {
         let fov = 45.0_f32.to_radians();
-        let projection = glm::perspective::<f32>(crate::SCREEN_WIDTH as f32 / crate::SCREEN_HEIGHT as f32, fov, 0.1, 100.0);
+        let projection = glm::perspective::<f32>(
+            crate::SCREEN_WIDTH as f32 / crate::SCREEN_HEIGHT as f32,
+            fov,
+            0.1,
+            100.0,
+        );
         let pos = glm::TVec3::new(4.0, 3.0, 3.0);
         let focus = glm::TVec3::zeros();
         let up = glm::TVec3::y_axis();
@@ -30,20 +34,20 @@ impl CameraConfig {
             pos,
             focus,
             fov,
-            mvp
+            mvp,
         }
     }
 }
 
-
-
 fn get_full_res_path(file_path: &str) -> String {
     let full_path = current_dir()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .to_owned()
-            .replace("\\", "/") + "/res/" + file_path;
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .to_owned()
+        .replace("\\", "/")
+        + "/res/"
+        + file_path;
 
     return full_path;
 }
@@ -57,14 +61,28 @@ pub fn load_texture(file_name: &str) -> GLuint {
 
     let texture: Image<u8>;
     match stb_image::image::load_with_depth(get_texture_path(file_name), 3, false) {
-        LoadResult::ImageU8(im) => { texture = im; }
-        _ => { panic!("error reading texture") }
+        LoadResult::ImageU8(im) => {
+            texture = im;
+        }
+        _ => {
+            panic!("error reading texture")
+        }
     }
 
     unsafe {
         gl::GenTextures(1, &mut tex_id);
         gl::BindTexture(gl::TEXTURE_2D, tex_id);
-        gl::TexImage2D(gl::TEXTURE_2D, 0, gl::RGB as GLint, texture.width as GLint, texture.height as GLint, 0, gl::RGB, gl::UNSIGNED_BYTE, texture.data.as_ptr() as *const GLvoid);
+        gl::TexImage2D(
+            gl::TEXTURE_2D,
+            0,
+            gl::RGB as GLint,
+            texture.width as GLint,
+            texture.height as GLint,
+            0,
+            gl::RGB,
+            gl::UNSIGNED_BYTE,
+            texture.data.as_ptr() as *const GLvoid,
+        );
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MAG_FILTER, gl::NEAREST as GLint);
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_MIN_FILTER, gl::NEAREST as GLint);
         gl::TexParameteri(gl::TEXTURE_2D, gl::TEXTURE_WRAP_S, gl::REPEAT as GLint);
@@ -74,7 +92,6 @@ pub fn load_texture(file_name: &str) -> GLuint {
     tex_id
 }
 
-
 /// cube mesh
 pub struct Cube {
     program: ShaderProgram,
@@ -82,9 +99,8 @@ pub struct Cube {
     vbo: GLuint,
     vertex_data: VertexData,
     tex_id: GLuint,
-    tbo: GLuint
+    tbo: GLuint,
 }
-
 
 impl Mesh for Cube {
     fn new(vertex_data: VertexData, uv_data: VertexData) -> Self {
@@ -118,9 +134,15 @@ impl Mesh for Cube {
             );
         }
 
-        Cube { program, vao, vbo, vertex_data, tex_id, tbo }
+        Cube {
+            program,
+            vao,
+            vbo,
+            vertex_data,
+            tex_id,
+            tbo,
+        }
     }
-
 
     fn draw(&self, camera: &CameraConfig) {
         unsafe {
@@ -161,7 +183,6 @@ impl Mesh for Cube {
         }
     }
 }
-
 
 impl Drop for Cube {
     fn drop(&mut self) {

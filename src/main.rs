@@ -11,8 +11,8 @@ use egui_sdl2_gl as egui_backend;
 use sdl2::video::SwapInterval;
 mod cube;
 mod meshes;
-use crate::meshes::*;
 use crate::cube::*;
+use crate::meshes::*;
 
 const SCREEN_WIDTH: u32 = 800;
 const SCREEN_HEIGHT: u32 = 600;
@@ -86,7 +86,9 @@ fn main() {
     let start_time = Instant::now();
 
     let (cube_vertex_data, cube_uv_data) = VertexData::cube_from_pos([0.0, 0.0, 0.0], 1.0);
-    let meshes = Meshes { meshes: vec![Box::new(Cube::new(cube_vertex_data, cube_uv_data))] };
+    let meshes = Meshes {
+        meshes: vec![Box::new(Cube::new(cube_vertex_data, cube_uv_data))],
+    };
     let camera_config = CameraConfig::new();
 
     let mut quit = false;
@@ -114,7 +116,7 @@ fn main() {
             for x in 0..PIC_WIDTH {
                 srgba.push(Color32::BLACK);
                 if y == PIC_HEIGHT - 1 {
-                    let y = amplitude * (angle * 3.142f32 / 180f32 + sine_shift).sin();
+                    let y = amplitude * (angle * std::f32::consts::PI / 180f32 + sine_shift).sin();
                     let y = PIC_HEIGHT as f32 / 2f32 - y;
                     srgba[(y as i32 * PIC_WIDTH + x) as usize] = Color32::YELLOW;
                     angle += 360f32 / PIC_WIDTH as f32;

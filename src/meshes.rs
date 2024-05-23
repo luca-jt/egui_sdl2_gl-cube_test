@@ -1,10 +1,9 @@
+use crate::cube::CameraConfig;
 use egui_sdl2_gl::gl;
 use egui_sdl2_gl::gl::types::*;
-use crate::cube::CameraConfig;
-use std::fs::read_to_string;
 use std::ffi::CString;
+use std::fs::read_to_string;
 use std::{ptr, str};
-
 
 /// compiles a gl shader
 pub fn compile_shader(src: &str, ty: GLenum) -> GLuint {
@@ -32,12 +31,14 @@ pub fn compile_shader(src: &str, ty: GLenum) -> GLuint {
                 ptr::null_mut(),
                 buf.as_mut_ptr() as *mut GLchar,
             );
-            panic!("{}", str::from_utf8(&buf).expect("ShaderInfoLog not valid utf8"));
+            panic!(
+                "{}",
+                str::from_utf8(&buf).expect("ShaderInfoLog not valid utf8")
+            );
         }
     }
     shader
 }
-
 
 /// links a gl shader program
 pub fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
@@ -67,13 +68,14 @@ pub fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
                 ptr::null_mut(),
                 buf.as_mut_ptr() as *mut GLchar,
             );
-            panic!("{}", str::from_utf8(&buf).expect("ProgramInfoLog not valid utf8"));
+            panic!(
+                "{}",
+                str::from_utf8(&buf).expect("ProgramInfoLog not valid utf8")
+            );
         }
         program
     }
 }
-
-
 
 #[allow(dead_code)]
 #[derive(Clone, Copy)]
@@ -81,126 +83,84 @@ pub fn link_program(vs: GLuint, fs: GLuint) -> GLuint {
 pub enum VertexData {
     VD3([GLfloat; 9]),
     VD8([GLfloat; 108]),
-    UV8([GLfloat; 72])
+    UV8([GLfloat; 72]),
 }
 
 impl VertexData {
     /// wrapper for 'get(index)'
     pub fn get(&self, index: usize) -> Option<&GLfloat> {
-        match self {
-            Self::VD3(data) => { return data.get(index); }
-            Self::VD8(data) => { return data.get(index); }
-            Self::UV8(data) => { return data.get(index); }
+        return match self {
+            Self::VD3(data) => {
+                data.get(index)
+            }
+            Self::VD8(data) => {
+                data.get(index)
+            }
+            Self::UV8(data) => {
+                data.get(index)
+            }
         }
     }
     /// wrapper for 'get_mut(index)'
     #[allow(dead_code)]
     pub fn get_mut(&mut self, index: usize) -> Option<&mut GLfloat> {
-        match self {
-            Self::VD3(data) => { return data.get_mut(index); }
-            Self::VD8(data) => { return data.get_mut(index); }
-            Self::UV8(data) => { return data.get_mut(index); }
+        return match self {
+            Self::VD3(data) => {
+                data.get_mut(index)
+            }
+            Self::VD8(data) => {
+                data.get_mut(index)
+            }
+            Self::UV8(data) => {
+                data.get_mut(index)
+            }
         }
     }
     /// wrapper for 'len()'
     pub fn len(&self) -> usize {
-        match self {
-            Self::VD3(data) => { return data.len(); }
-            Self::VD8(data) => { return data.len(); }
-            Self::UV8(data) => { return data.len(); }
+        return match self {
+            Self::VD3(data) => {
+                data.len()
+            }
+            Self::VD8(data) => {
+                data.len()
+            }
+            Self::UV8(data) => {
+                data.len()
+            }
         }
     }
     /// creates cube vertex data from center position and size
-    pub fn cube_from_pos(center: [GLfloat; 3], half_edge_length: GLfloat) -> (VertexData, VertexData) {
+    pub fn cube_from_pos(
+        center: [GLfloat; 3],
+        half_edge_length: GLfloat,
+    ) -> (VertexData, VertexData) {
         let mut vertex_data: [GLfloat; 108] = [
             // front face
-            -1.0, 1.0, 1.0,
-            -1.0,-1.0, 1.0,
-            1.0,-1.0, 1.0,
-            1.0, 1.0, 1.0,
-            -1.0, 1.0, 1.0,
-            1.0,-1.0, 1.0,
-            // back face
-            1.0, 1.0,-1.0,
-            -1.0,-1.0,-1.0,
-            -1.0, 1.0,-1.0,
-            1.0, 1.0,-1.0,
-            1.0,-1.0,-1.0,
-            -1.0,-1.0,-1.0,
-            // left face
-            -1.0,-1.0,-1.0,
-            -1.0,-1.0, 1.0,
-            -1.0, 1.0, 1.0,
-            -1.0,-1.0,-1.0,
-            -1.0, 1.0, 1.0,
-            -1.0, 1.0,-1.0,
-            // right face
-            1.0, 1.0, 1.0,
-            1.0,-1.0,-1.0,
-            1.0, 1.0,-1.0,
-            1.0,-1.0,-1.0,
-            1.0, 1.0, 1.0,
-            1.0,-1.0, 1.0,
-            // top face
-            1.0, 1.0, 1.0,
-            1.0, 1.0,-1.0,
-            -1.0, 1.0,-1.0,
-            1.0, 1.0, 1.0,
-            -1.0, 1.0,-1.0,
-            -1.0, 1.0, 1.0,
-            // bottom face
-            1.0,-1.0, 1.0,
-            -1.0,-1.0,-1.0,
-            1.0,-1.0,-1.0,
-            1.0,-1.0, 1.0,
-            -1.0,-1.0, 1.0,
-            -1.0,-1.0,-1.0];
+            -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0,
+            -1.0, 1.0, // back face
+            1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
+            -1.0, -1.0, -1.0, // left face
+            -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, 1.0,
+            -1.0, 1.0, -1.0, // right face
+            1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0,
+            -1.0, 1.0, // top face
+            1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0,
+            1.0, 1.0, // bottom face
+            1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,
+            -1.0, -1.0, -1.0,
+        ];
         for (i, vertex) in vertex_data.iter_mut().enumerate() {
             *vertex = *vertex * half_edge_length + center[i % 3];
         }
         let mut uv_data: [GLfloat; 72] = [
             // Front face
-            0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0,
-            0.0, 0.0,
-            1.0, 1.0,
-            // Back face
-            0.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0,
-            0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-            // Left face
-            0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-            0.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0,
-            // Right face
-            0.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0,
-            1.0, 1.0,
-            0.0, 0.0,
-            1.0, 0.0,
-            // Top face
-            0.0, 0.0,
-            1.0, 0.0,
-            1.0, 1.0,
-            0.0, 0.0,
-            1.0, 1.0,
-            0.0, 1.0,
-            // Bottom face
-            1.0, 0.0,
-            0.0, 1.0,
-            1.0, 1.0,
-            1.0, 0.0,
-            0.0, 0.0,
-            0.0, 1.0
+            0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, // Back face
+            0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, // Left face
+            0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, // Right face
+            0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, // Top face
+            0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, // Bottom face
+            1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
         ];
         for uv in uv_data.iter_mut() {
             *uv *= half_edge_length;
@@ -210,19 +170,19 @@ impl VertexData {
     }
 }
 
-
 /// a mesh that can be rendered in gl
 pub trait Mesh {
     /// creates a new mesh from vertex data
-    fn new(vertex_data: VertexData, color_data: VertexData) -> Self where Self: Sized;
+    fn new(vertex_data: VertexData, color_data: VertexData) -> Self
+    where
+        Self: Sized;
     /// draws the mesh
     fn draw(&self, camera: &CameraConfig);
 }
 
-
 /// collection of all meshes
 pub struct Meshes {
-    pub meshes: Vec<Box<dyn Mesh>>
+    pub meshes: Vec<Box<dyn Mesh>>,
 }
 
 impl Meshes {
@@ -241,14 +201,13 @@ impl Meshes {
     }
 }
 
-
 /// shader program to use to render
 pub struct ShaderProgram {
     pub id: GLuint,
     pub mvp_unif: GLint,
     pub sampler_unif: GLint,
     pub pos_attr: GLint,
-    pub tex_attr: GLint
+    pub tex_attr: GLint,
 }
 
 impl ShaderProgram {
@@ -275,7 +234,13 @@ impl ShaderProgram {
         let c_uv = CString::new("vertexUV").unwrap();
         let tex_attr = gl::GetAttribLocation(id, c_uv.as_ptr());
 
-        Self { id, mvp_unif, sampler_unif, pos_attr, tex_attr }
+        Self {
+            id,
+            mvp_unif,
+            sampler_unif,
+            pos_attr,
+            tex_attr,
+        }
     }
 }
 
